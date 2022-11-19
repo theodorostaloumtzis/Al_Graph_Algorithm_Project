@@ -1,8 +1,9 @@
 import pygame
+import GraphElement
 import Colour
 
 
-class Node:
+class Node(GraphElement):
     def __init__(self, row, col, width, total_rows, neighbours=None):
         self.row = row
         self.col = col
@@ -61,5 +62,4 @@ class Node:
 
     def draw(self, win):
         pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.width))
-    
     
