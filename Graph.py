@@ -1,18 +1,6 @@
 import Node
 import pygame
-
-#   COLOURS DEFINED
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 255, 0)
-YELLOW = (255, 255, 0)
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-PURPLE = (128, 0, 128)
-ORANGE = (255, 165, 0)
-GREY = (128, 128, 128)
-TURQUOISE = (64, 224, 208)
-
+import Colour
 
 class Graph:
     def __init__(self, nodes=None):
@@ -57,6 +45,6 @@ class Graph:
         total_rows = 2 * rows - 1
         gap = width // total_rows
         for i in range(total_rows):
-            pygame.draw.line(win, GREY, (0, i * gap), (width, i * gap))
+            pygame.draw.line(win, Colour.GREY, (0, i * gap), (width, i * gap))
             for j in range(total_rows):
-                pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
+                pygame.draw.line(win, Colour.GREY, (j * gap, 0), (j * gap, width))
