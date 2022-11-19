@@ -5,19 +5,17 @@ import Colour
 
 class Node(GraphElement):
     def __init__(self, row, col, width, total_rows, neighbours=None):
-        self.row = row
-        self.col = col
-        self.value = [row, col]
-        self.x = row * width
-        self.y = col * width
-        self.colour = Colour.WHITE
+        super().__init__(row, col, width, total_rows)
+        
+        self.colour = Colour.BLACK
+        self.type = "node"
+
         if neighbours is None:
             self.neighbours = []
         else:
             self.neighbours = neighbours
-        self.width = width
-        self.total_rows = total_rows
-        self.weight = 1
+        
+    
 
     '''      Getters      '''
     def get_pos(self):
@@ -38,10 +36,13 @@ class Node(GraphElement):
     def is_end(self):
         return self.colour == Colour.TURQUOISE
 
+    def get_type(self):
+        return self.type
+
+    '''     Setters      '''
     def reset(self):
         self.colour = Colour.WHITE
 
-    '''     Setters      '''
     def make_closed(self):
         self.colour = Colour.RED
 
@@ -62,4 +63,20 @@ class Node(GraphElement):
 
     def draw(self, win):
         pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.width))
+
+    def update_neighbours(self, graph):
+        if self.row < self.total_rows - 2 and not graph[self.row + 1][self.col].type == "empty":    #Down
+          self.neighbors.append(graph[self.row + 2][self.col])  
+
+        if self.row < self.total_rows - 2 and not graph[self.row + 1][self.col].type == "empty":    #Up
+            self.neighbors.append(graph[self.row - 2][self.col])
+        
+        if self.row < self.total_rows - 2 and not graph[self.row + 1][self.col].type == "empty":    #Right
+            self.neighbors.append(graph[self.row][self.col + 2])
+        
+        if self.row < self.total_rows - 2 and not graph[self.row + 1][self.col].type == "empty":    #Left
+            self.neighbors.append(graph[self.row][self.col - 2])
+
+    def __lt__(self, other):
+	    return False
     
