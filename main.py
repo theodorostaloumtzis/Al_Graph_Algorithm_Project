@@ -1,18 +1,25 @@
 from queue import PriorityQueue
 import pygame
-import Node
-import Graph
-import GraphElement
+import Colour
 
 WIDTH = 800
-WIN = pygame.display.set_mode((WIDTH, WIDTH))
-pygame.display.set_caption(" Path Finding Algorithm Program")
+HEIGHT = 500
+
+def main(width, height):
+    main_screen = pygame.display.set_mode((width, height))
+    pygame.display.set_caption("A Path Finding Algorithm Program")
+    main_screen.fill(Colour.WHITE)
+    pygame.display.flip()
+    running = True
+
+    while running:
+        for event in pygame.event.get():
 
 
-
-
-def main(win, width):
-    
-
-
+            if event.type == pygame.QUIT:
+                running = False
+                
+                
+                
+main(WIDTH, HEIGHT)
 
