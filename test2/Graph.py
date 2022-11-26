@@ -1,7 +1,7 @@
 
-from GraphElement import Node
-from GraphElement import Edge
-from GraphElement import GraphElement
+from test2.GraphElement import Node
+from test2.GraphElement import Edge
+from test2.GraphElement import GraphElement
 import pygame
 import Colour
 

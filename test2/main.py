@@ -1,6 +1,6 @@
 from queue import PriorityQueue
 import pygame
-from Graph import Graph
+from test2.Graph import Graph
 import Colour
 
 
