@@ -1,6 +1,7 @@
-import Node
-import Edge
-import GraphElement
+
+from GraphElement import Node
+from GraphElement import Edge
+from GraphElement import GraphElement
 import pygame
 import Colour
 
@@ -31,7 +32,7 @@ class Graph:
             self.graph_elements.append([])
             for j in range(total_rows):
                 if i % 2 == 0 and j % 2 == 0:
-                    self.graph_elements[i].append(Node(i, j, gap, total_rows))
+                    self.graph_elements.append(Node(i, j, gap, total_rows))
                 elif i % 2 == 1 and j % 2 == 1:
                     self.graph_elements.append(GraphElement(i, j , gap, total_rows))
                 else:
