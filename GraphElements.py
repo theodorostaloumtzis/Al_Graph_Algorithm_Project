@@ -156,7 +156,8 @@ class Edge(GraphElement):
         return self.orientation
 
     def get_value(self):
-        return self.value[0], self.value[1] 
+        v = [self.row, self.col]
+        return v 
 
 
     '''     Setters      '''
@@ -164,7 +165,7 @@ class Edge(GraphElement):
         self.colour = Colour.BLACK
 
     def make_closed(self):
-        self.colour = Colour.RED
+        self.colour = Colour.WHITE
     
     def make_open(self):
         self.colour = Colour.GREEN
