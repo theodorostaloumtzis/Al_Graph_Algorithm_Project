@@ -66,7 +66,7 @@ def ideal_width(rows):
     else:
         return total_rows * 30
 
-
+    '''   Removes a percentage of  the edges   '''
 def remove_edges(graph, edges, p):
     rmp = (p * len(edges))/100                          
     temp_slots = []                 #a list of random list solts used to check if ranint returned an already existing num
@@ -87,7 +87,7 @@ def remove_edges(graph, edges, p):
 
     return graph , temp_slots
         
-
+    '''   Checks if the edge is in the for removal    '''
 def edge_check(edge, rm_edge):
     report = False
     for v in rm_edge:
@@ -97,7 +97,7 @@ def edge_check(edge, rm_edge):
     return report
 
 
-
+    '''    Checks if the random intger number exists in the list of random integers    '''
 def num_check(r,temp_slots):
     report = True
     for x in temp_slots:
@@ -106,24 +106,45 @@ def num_check(r,temp_slots):
 
     return report    
 
+    '''    Makes a random start and end    '''
+def random_start_end(graph):
+    x = 0
+    y = 0
+    temp = 0
+    tmp_x = 0
+    tmp_y = 0
 
-def get_valuesX(array):
-    return array[0]
+    while temp != 1:
+        x = randrange(len(graph))
+        y = randrange(len(graph))
+        if x % 2 == 0 and y % 2 == 0:
+            graph[x][y].make_start()
+            tmp_x = x
+            tmp_y = y
+            temp = 1
 
+    temp = 0
+    while temp !=1:
+        x = randrange(len(graph))
+        y = randrange(len(graph))
+        if x % 2 == 0 and y % 2 == 0:
+            if x != tmp_x and y != tmp_y:
+                graph[x][y].make_end()
+                temp = 1
 
-def get_valuesY(array):
-    return array[1]
+    return graph
+
 
 
 def main():
     rows = int(input("Please insert the size of the grid NxN: "))
-    while rows < 3 and rows > 50:
+    while rows < 3 or rows > 50:
         rows = int(input("Please enter a different size:"))
 
     total_rows = 2 * rows - 1
-    percentage = int(input("Please insert the percentage of edges to be removed 0-100"))
-    while 0 > percentage and percentage >100:
-        percentage = int(input("Please insert the percentage of edges to be removed 0-100"))
+    percentage = int(input("Please insert the percentage of edges to be removed 0-100: "))
+    while 0 > percentage or percentage >100:
+        percentage = int(input("Please insert the percentage of edges to be removed 0-100: "))
 
 
     width = ideal_width(rows)
@@ -132,9 +153,8 @@ def main():
 
     graph, temp = remove_edges(graph, edges, percentage)
 
-    
-    print(len(edges))
-    print(len(temp))
+    graph = random_start_end(graph)
+
 
     win = pygame.display.set_mode((width, width))
     pygame.display.set_caption("A Path Finding Algorithm Program")
