@@ -30,6 +30,9 @@ class GraphElement:
     def draw(self, win):
         pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.width))
 
+    def update_neighbours(self):
+        pass
+
     def __lt__(self, other):
 	    return False
   
@@ -100,20 +103,24 @@ class Node(GraphElement):
 
     '''     Functions     '''
     def draw(self, win):
-        pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.width))
+        pygame.draw.rect(win, Colour.BLACK, (self.x, self.y, self.width, self.width))
+        new_x = self.x + 1
+        new_y = self.y + 1
+        new_width = self.width - 2
+        pygame.draw.rect(win, self.colour, (new_x, new_y, new_width, new_width))
 
     def update_neighbours(self, graph):
         if self.row < self.total_rows - 2 and not graph[self.row + 1][self.col].type == "empty":    #Down
-          self.neighbors.append(graph[self.row + 2][self.col])  
+          self.neighbours.append(graph[self.row + 1][self.col])  
 
         if self.row < self.total_rows - 2 and not graph[self.row + 1][self.col].type == "empty":    #Up
-            self.neighbors.append(graph[self.row - 2][self.col])
+            self.neighbours.append(graph[self.row - 1][self.col])
         
         if self.row < self.total_rows - 2 and not graph[self.row + 1][self.col].type == "empty":    #Right
-            self.neighbors.append(graph[self.row][self.col + 2])
+            self.neighbours.append(graph[self.row][self.col + 1])
         
         if self.row < self.total_rows - 2 and not graph[self.row + 1][self.col].type == "empty":    #Left
-            self.neighbors.append(graph[self.row][self.col - 2])
+            self.neighbours.append(graph[self.row][self.col - 1])
 
     def __lt__(self, other):
 	    return False  
@@ -179,9 +186,6 @@ class Edge(GraphElement):
             pygame.draw.rect(win, Colour.WHITE, (self.x, self.y, (3 *self.width)/8, self.width))
             new_x = self.x + (5 *self.width)/8
             pygame.draw.rect(win, Colour.WHITE, (new_x, self.y, (3 *self.width)/8, self.width))
-            
-
-
 
         elif self.orientation == "horizontal":
             pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.width))
@@ -190,7 +194,7 @@ class Edge(GraphElement):
             pygame.draw.rect(win, Colour.WHITE, (self.x, new_y, self.width, (3 *self.width)/8))
 
 
-    def update_connectors(self, graph):
+    def update_neighbours(self, graph):
         self.connectors = []
         if self.orientation == "vertical":
             self.connectors.append(graph[self.row - 1][self.col])  # UP Connector

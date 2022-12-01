@@ -1,5 +1,6 @@
 import pygame
 import Colour
+import Astar
 from GraphElements import GraphElement
 from GraphElements import Node
 from GraphElements import Edge
@@ -66,6 +67,7 @@ def ideal_width(rows):
     else:
         return total_rows * 30
 
+
     '''   Removes a percentage of  the edges   '''
 def remove_edges(graph, edges, p):
     rmp = (p * len(edges))/100                          
@@ -85,9 +87,9 @@ def remove_edges(graph, edges, p):
                     graph[i][j].make_closed()
                     temp +=1
 
-    return graph , temp_slots
+    return graph
         
-    '''   Checks if the edge is in the for removal    '''
+    '''    Checks if the edge is in the for removal    '''
 def edge_check(edge, rm_edge):
     report = False
     for v in rm_edge:
@@ -106,6 +108,7 @@ def num_check(r,temp_slots):
 
     return report    
 
+
     '''    Makes a random start and end    '''
 def random_start_end(graph):
     x = 0
@@ -122,7 +125,7 @@ def random_start_end(graph):
             tmp_x = x
             tmp_y = y
             temp = 1
-
+    start = [tmp_x, tmp_y]
     temp = 0
     while temp !=1:
         x = randrange(len(graph))
@@ -131,10 +134,9 @@ def random_start_end(graph):
             if x != tmp_x and y != tmp_y:
                 graph[x][y].make_end()
                 temp = 1
+    end = [x, y]
 
-    return graph
-
-
+    return graph, start, end
 
 def main():
     rows = int(input("Please insert the size of the grid NxN: "))
@@ -146,31 +148,18 @@ def main():
     while 0 > percentage or percentage >100:
         percentage = int(input("Please insert the percentage of edges to be removed 0-100: "))
 
-
     width = ideal_width(rows)
 
     graph, edges = make_graph(rows, width)
 
-    graph, temp = remove_edges(graph, edges, percentage)
+    graph = remove_edges(graph, edges, percentage)
 
-    graph = random_start_end(graph)
-
+    graph, start, end = random_start_end(graph)
 
     win = pygame.display.set_mode((width, width))
     pygame.display.set_caption("A Path Finding Algorithm Program")
 
     running = True
-
-    '''
-    for i in range(total_rows):
-        print()
-        for j in range(total_rows):
-            print(f" element:{graph[i][j].get_type()}  orientation:{graph[i][j].get_orientation()} x: {i}, y: {j}")
-    '''
-    
-
-    #print(edges)
-    #print(len(edges))
 
     while running:
         draw(win, graph, rows, width)
@@ -179,10 +168,15 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-            
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    for row in graph:
+                        for graph_element in row:
+                            graph_element.update_neighbours(graph)
+
+                    Astar.algorithm(lambda:draw(win, graph, rows, width), graph, start, end)
+
+    pygame.quit()
 
         
-
-
-
 main()
