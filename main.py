@@ -1,6 +1,6 @@
 import pygame
 import Colour
-import Astar
+import Algorithms
 from GraphElements import GraphElement
 from GraphElements import Node
 from GraphElements import Edge
@@ -168,13 +168,13 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-            elif event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN: 
                 if event.key == pygame.K_SPACE:
                     for row in graph:
                         for graph_element in row:
                             graph_element.update_neighbours(graph)
 
-                    Astar.algorithm(lambda:draw(win, graph, rows, width), graph, start, end)
+                    Algorithms.algorithm_astar(lambda:draw(win, graph, rows, width), graph, start, end)
 
     pygame.quit()
 
