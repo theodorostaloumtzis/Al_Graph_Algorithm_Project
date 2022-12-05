@@ -28,16 +28,6 @@ def make_graph(rows,width):
     return graph, edges
 
 
-'''     Draws the grid     '''
-def draw_grid(win, rows, width):
-    total_rows = 2 * rows - 1
-    gap = width // total_rows
-    for i in range(total_rows):
-        pygame.draw.line(win, Colour.GREY,(0, i * gap), (width, i * gap))
-        for j in range(total_rows):
-            pygame.draw.line(win, Colour.GREY, (j * gap, 0), (j * gap, width))
-
-
 '''     Draws the window     '''
 def draw(win, graph, rows, width):
     win.fill(Colour.WHITE)
@@ -46,7 +36,6 @@ def draw(win, graph, rows, width):
         for graph_element in row:
             graph_element.draw(win)
 
-    draw_grid(win, rows, width)
     pygame.display.update()
 
 
@@ -84,7 +73,7 @@ def remove_edges(graph, edges, p):
         for j in range(len(graph)):
             if graph[i][j].get_type() == "edge":
                 if edge_check(graph[i][j],rm_edges):
-                    graph[i][j].make_closed()
+                    graph[i][j].make_removed()
                     temp +=1
 
     return graph
@@ -116,6 +105,8 @@ def random_start_end(graph):
     temp = 0
     tmp_x = 0
     tmp_y = 0
+    start = None
+    end = None
 
     while temp != 1:
         x = randrange(len(graph))
@@ -124,9 +115,11 @@ def random_start_end(graph):
             graph[x][y].make_start()
             tmp_x = x
             tmp_y = y
+            start = graph[x][y]
             temp = 1
-    start = [tmp_x, tmp_y]
+            
     temp = 0
+
     while temp !=1:
         x = randrange(len(graph))
         y = randrange(len(graph))
@@ -134,9 +127,13 @@ def random_start_end(graph):
             if x != tmp_x and y != tmp_y:
                 graph[x][y].make_end()
                 temp = 1
-    end = [x, y]
+                end = graph[x][y]
 
     return graph, start, end
+
+def reset_graph(temp_graph, graph):
+    graph = temp_graph
+    return graph
 
 def main():
     rows = int(input("Please insert the size of the grid NxN: "))
@@ -145,7 +142,7 @@ def main():
 
     total_rows = 2 * rows - 1
     percentage = int(input("Please insert the percentage of edges to be removed 0-100: "))
-    while 0 > percentage or percentage >100:
+    while 0 > percentage or percentage > 100:
         percentage = int(input("Please insert the percentage of edges to be removed 0-100: "))
 
     width = ideal_width(rows)
@@ -156,8 +153,10 @@ def main():
 
     graph, start, end = random_start_end(graph)
 
+    temp_graph = graph
+
     win = pygame.display.set_mode((width, width))
-    pygame.display.set_caption("A Path Finding Algorithm Program")
+    pygame.display.set_caption("A Path Finding Algorithm Program ")
 
     running = True
 
@@ -175,6 +174,8 @@ def main():
                             graph_element.update_neighbours(graph)
 
                     Algorithms.algorithm_astar(lambda:draw(win, graph, rows, width), graph, start, end)
+
+            
 
     pygame.quit()
 

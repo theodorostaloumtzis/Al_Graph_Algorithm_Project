@@ -41,7 +41,7 @@ class Node(GraphElement):
     def __init__(self, row, col, width, total_rows, neighbours=None):
         super().__init__(row, col, width, total_rows)
         
-        self.colour = Colour.BLACK
+        self.colour = Colour.LIGHT_GREY
         self.type = "node"
         self.orientation = "null"
 
@@ -77,7 +77,7 @@ class Node(GraphElement):
 
     '''     Setters      '''
     def reset(self):
-        self.colour = Colour.BLACK
+        self.colour = Colour.GREY
 
     def make_closed(self):
         self.colour = Colour.RED
@@ -89,7 +89,7 @@ class Node(GraphElement):
         self.colour = Colour.ORANGE
 
     def make_end(self):
-        self.colour = Colour.TURQUOISE
+        self.colour = Colour.BLACK
 
     def make_path(self):
         self.colour = Colour.PURPLE
@@ -161,12 +161,14 @@ class Edge(GraphElement):
         v = [self.row, self.col]
         return v 
 
-
     '''     Setters      '''
     def reset(self):
         self.colour = Colour.BLACK
 
     def make_closed(self):
+        self.colour = Colour.RED
+
+    def make_removed(self):
         self.colour = Colour.WHITE
     
     def make_open(self):
@@ -175,33 +177,30 @@ class Edge(GraphElement):
     def make_path(self):
         self.colour = Colour.PURPLE
 
-  
-
-
     '''     Functions     '''
     def draw(self, win):
         if self.orientation == "vertical":
             pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.width))
             pygame.draw.rect(win, Colour.WHITE, (self.x, self.y, (3 *self.width)/8, self.width))
             new_x = self.x + (5 *self.width)/8
-            pygame.draw.rect(win, Colour.WHITE, (new_x, self.y, (3 *self.width)/8, self.width))
+            pygame.draw.rect(win, Colour.WHITE, (new_x, self.y, ((3 *self.width)/8) + 1, self.width))
 
         else:
             pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.width))
             pygame.draw.rect(win, Colour.WHITE, (self.x, self.y, self.width, (3 *self.width)/8))
             new_y = self.y + (5 *self.width)/8
-            pygame.draw.rect(win, Colour.WHITE, (self.x, new_y, self.width, (3 *self.width)/8))
+            pygame.draw.rect(win, Colour.WHITE, (self.x, new_y, self.width, ((3 *self.width)/8) + 1))
 
-
+    
     def update_neighbours(self, graph):
         self.neighbours = []
         if self.orientation == "vertical":
-            self.neighbours.append(graph[self.row][self.col - 1])  # UP Connector
-            self.neighbours.append(graph[self.row][self.col + 1])  # Down Connector
+            self.neighbours.append(graph[self.row][self.col - 1])  # UP Neighbour
+            self.neighbours.append(graph[self.row][self.col + 1])  # Down Neighbour
 
         if self.orientation == "horizontal":
-            self.neighbours.append(graph[self.row - 1][self.col])  # LEFT Connector
-            self.neighbours.append(graph[self.row + 1][self.col])  # RIGHT Connector
+            self.neighbours.append(graph[self.row - 1][self.col])  # LEFT Neighbour
+            self.neighbours.append(graph[self.row + 1][self.col])  # RIGHT Neighbour
  
     def __lt__(self, other):
 	    return False
