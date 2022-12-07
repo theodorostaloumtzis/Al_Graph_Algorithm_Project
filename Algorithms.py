@@ -15,10 +15,11 @@ def h(p1, p2):
 
 
 '''    Function that reconstructs the path    '''
-def reconstruct_path(came_from, current, draw):
+def reconstruct_path(came_from, start, current, draw):
 	while current in came_from:
 		current = came_from[current]
 		current.make_path()
+		start.make_start()
 		draw()
 
 
@@ -43,15 +44,15 @@ def algorithm_astar(draw, graph, start, end):
 		open_set_hash.remove(current)
 
 		if current == end:
-			reconstruct_path(came_from, end, draw)
+			reconstruct_path(came_from, start, end, draw)
 			end.make_end()
-			return True
+			return False
 
 		elif current.get_type() == "edge":
 			for neighbour in current.neighbours:
-				temp_g_score = g_score[current] + h(neighbour.get_pos(), end.get_pos())
+				temp_g_score = g_score[current] + 1
 				
-				if temp_g_score < g_score[neighbour]:
+				if temp_g_score < g_score[neighbour] and h(current.get_pos(), end.get_pos()) > h(neighbour.get_pos(), end.get_pos()):
 					came_from[neighbour] = current
 					g_score[neighbour] = temp_g_score
 					f_score[neighbour] = temp_g_score + h(neighbour.get_pos(), end.get_pos())
@@ -67,7 +68,7 @@ def algorithm_astar(draw, graph, start, end):
 			for neighbour in current.neighbours:
 				temp_g_score = g_score[current] + neighbour.weight
 
-				if temp_g_score < g_score[neighbour]:
+				if temp_g_score < g_score[neighbour] and h(current.get_pos(), end.get_pos()) > h(neighbour.get_pos(), end.get_pos()):
 					came_from[neighbour] = current
 					g_score[neighbour] = temp_g_score
 					f_score[neighbour] = temp_g_score + h(neighbour.get_pos(), end.get_pos())
@@ -107,9 +108,9 @@ def algorithm_ucs(draw, graph, start, end):
 		open_set_hash.remove(current)
 
 		if current == end:
-			reconstruct_path(came_from, end, draw)
+			reconstruct_path(came_from,start, end, draw)
 			end.make_end()
-			return True
+			return False
 
 		elif current.get_type() == "edge":
 			for neighbour in current.neighbours:
