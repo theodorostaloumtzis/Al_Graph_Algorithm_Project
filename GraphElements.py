@@ -2,6 +2,7 @@ import pygame
 import Colour
 from random import randrange
 
+
 class GraphElement:
     def __init__(self, row, col, width, total_rows):
         self.row = row
@@ -43,13 +44,13 @@ class GraphElement:
         pass
 
     def __lt__(self, other):
-	    return False
-  
+        return False
+
 
 class Node(GraphElement):
     def __init__(self, row, col, width, total_rows, neighbours=None):
         super().__init__(row, col, width, total_rows)
-        
+
         self.colour = Colour.LIGHT_GREY
         self.type = "node"
         self.orientation = "null"
@@ -60,6 +61,7 @@ class Node(GraphElement):
             self.neighbours = neighbours
 
     '''      Getters      '''
+
     def get_pos(self):
         return self.row, self.col
 
@@ -84,7 +86,9 @@ class Node(GraphElement):
     def get_value(self):
         v = [self.row, self.col]
         return v
+
     '''     Setters      '''
+
     def reset(self):
         self.colour = Colour.LIGHT_GREY
 
@@ -103,8 +107,8 @@ class Node(GraphElement):
     def make_path(self):
         self.colour = Colour.PURPLE
 
-
     '''     Functions     '''
+
     def draw(self, win):
         pygame.draw.rect(win, Colour.BLACK, (self.x, self.y, self.width, self.width))
         new_x = self.x + 1
@@ -114,20 +118,20 @@ class Node(GraphElement):
 
     def update_neighbours(self, graph):
         self.neighbours = []
-        if self.row < self.total_rows - 2 and not graph[self.row + 1][self.col].is_removed():    #Down
-          self.neighbours.append(graph[self.row + 1][self.col])  
+        if self.row < self.total_rows - 2 and not graph[self.row + 1][self.col].is_removed():  # Down
+            self.neighbours.append(graph[self.row + 1][self.col])
 
-        if self.row > 1 and not graph[self.row - 1][self.col].is_removed():    #Up
+        if self.row > 1 and not graph[self.row - 1][self.col].is_removed():  # Up
             self.neighbours.append(graph[self.row - 1][self.col])
-        
-        if self.col < self.total_rows - 2 and not graph[self.row][self.col + 1].is_removed():    #Right
+
+        if self.col < self.total_rows - 2 and not graph[self.row][self.col + 1].is_removed():  # Right
             self.neighbours.append(graph[self.row][self.col + 1])
-        
-        if self.col > 1 and not graph[self.row][self.col - 1].is_removed():    #Left
+
+        if self.col > 1 and not graph[self.row][self.col - 1].is_removed():  # Left
             self.neighbours.append(graph[self.row][self.col - 1])
 
     def __lt__(self, other):
-	    return False  
+        return False
 
 
 class Edge(GraphElement):
@@ -137,17 +141,17 @@ class Edge(GraphElement):
         self.type = "edge"
         self.weight = randrange(1, 20)
 
-        if  self.row % 2 == 0 and self.col % 2 == 1:
+        if self.row % 2 == 0 and self.col % 2 == 1:
             self.orientation = "vertical"
-        else: 
+        else:
             self.orientation = "horizontal"
         if neighbours is None:
             self.neighbours = []
-        else: 
+        else:
             self.neighbours = neighbours
 
-
     '''      Getters      '''
+
     def get_pos(self):
         return self.row, self.col
 
@@ -168,7 +172,7 @@ class Edge(GraphElement):
 
     def get_value(self):
         v = [self.row, self.col]
-        return v 
+        return v
 
     def is_end(self):
         pass
@@ -177,6 +181,7 @@ class Edge(GraphElement):
         pass
 
     '''     Setters      '''
+
     def reset(self):
         self.colour = Colour.BLACK
 
@@ -185,28 +190,28 @@ class Edge(GraphElement):
 
     def make_removed(self):
         self.colour = Colour.WHITE
-    
+
     def make_open(self):
         self.colour = Colour.GREEN
-    
+
     def make_path(self):
         self.colour = Colour.PURPLE
 
     '''     Functions     '''
+
     def draw(self, win):
         if self.orientation == "vertical":
             pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.width))
-            pygame.draw.rect(win, Colour.WHITE, (self.x, self.y, (3 *self.width)/8, self.width))
-            new_x = self.x + (5 *self.width)/8
-            pygame.draw.rect(win, Colour.WHITE, (new_x, self.y, ((3 *self.width)/8) + 1, self.width))
+            pygame.draw.rect(win, Colour.WHITE, (self.x, self.y, (3 * self.width) / 8, self.width))
+            new_x = self.x + (5 * self.width) / 8
+            pygame.draw.rect(win, Colour.WHITE, (new_x, self.y, ((3 * self.width) / 8) + 1, self.width))
 
         else:
             pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.width))
-            pygame.draw.rect(win, Colour.WHITE, (self.x, self.y, self.width, (3 *self.width)/8))
-            new_y = self.y + (5 *self.width)/8
-            pygame.draw.rect(win, Colour.WHITE, (self.x, new_y, self.width, ((3 *self.width)/8) + 1))
+            pygame.draw.rect(win, Colour.WHITE, (self.x, self.y, self.width, (3 * self.width) / 8))
+            new_y = self.y + (5 * self.width) / 8
+            pygame.draw.rect(win, Colour.WHITE, (self.x, new_y, self.width, ((3 * self.width) / 8) + 1))
 
-    
     def update_neighbours(self, graph):
         self.neighbours = []
         if self.orientation == "vertical":
@@ -216,6 +221,6 @@ class Edge(GraphElement):
         if self.orientation == "horizontal":
             self.neighbours.append(graph[self.row - 1][self.col])  # LEFT Neighbour
             self.neighbours.append(graph[self.row + 1][self.col])  # RIGHT Neighbour
- 
+
     def __lt__(self, other):
-	    return False
+        return False
