@@ -1,6 +1,3 @@
-import pygame
-import Colour
-import Algorithms
 from GraphElements import GraphElement
 from GraphElements import Node
 from GraphElements import Edge
@@ -113,6 +110,9 @@ def random_start_end(graph):
                 end = graph[x][y]
 
     return graph, start, end
+
+
+'''    resets the graph starting state    '''
 
 
 def reset_graph(graph, start, end):

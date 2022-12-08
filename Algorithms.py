@@ -1,10 +1,5 @@
 import pygame
-import Colour
-from GraphElements import GraphElement
-from GraphElements import Node
-from GraphElements import Edge
 from queue import PriorityQueue
-from random import randrange
 
 '''    Heuristic function Manhattan    '''
 
