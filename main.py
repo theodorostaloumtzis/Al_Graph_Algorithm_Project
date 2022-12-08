@@ -134,12 +134,22 @@ def random_start_end(graph):
     return graph, start, end
 
 
-def choice_input(str):
-    choice = int(input(str))
-    while 1 > choice or choice > 4:
-        choice = int(input(str))
-    
-    return choice
+def reset_graph(graph, start, end):
+    for i in range(len(graph)):
+        for j in range(len(graph)):
+
+            if graph[i][j].get_type() == "edge" and graph[i][j].is_removed():
+                graph[i][j].make_removed()
+            
+            else:
+                graph[i][j].reset()
+
+        graph[end.row][end.col].make_end()
+        graph[start.row][start.col].make_start()
+                
+
+    return graph
+            
 
 
 def main():
@@ -147,7 +157,7 @@ def main():
     while rows < 3 or rows > 50:
         rows = int(input("Please enter a different size:"))
 
-    total_rows = 2 * rows - 1
+    
     percentage = int(input("Please insert the percentage of edges to be removed 0-100: "))
     while 0 > percentage or percentage > 100:
         percentage = int(input("Please insert the percentage of edges to be removed 0-100: "))
@@ -160,60 +170,41 @@ def main():
 
     graph, start, end = random_start_end(graph)
 
-    temp_graph = graph
-
     win = pygame.display.set_mode((width, width))
     pygame.display.set_caption("A Path Finding Algorithm Program ")
-
-    
-    choice = choice_input("Please enter a number 1.UCS 2.IDS 3.A*:")
-
 
     running = True
 
     while running:
         draw(win, graph, rows, width)
+        for row in graph:
+            for graph_element in row:
+                graph_element.update_neighbours(graph)
         for event in pygame.event.get():
-
             if event.type == pygame.QUIT:
                 running = False
+            
+            if event.type == pygame.KEYDOWN: 
+                if event.key == pygame.K_u:
+                    Algorithms.algorithm_ucs(lambda:draw(win, graph, rows, width), graph, start, end)
+                    pygame.event.wait()
 
-            if choice == 1:
-                if event.type == pygame.KEYDOWN: 
-                    if event.key == pygame.K_SPACE:
-                        for row in graph:
-                            for graph_element in row:
-                                graph_element.update_neighbours(graph)
 
-                        Algorithms.algorithm_ucs(lambda:draw(win, graph, rows, width), graph, start, end)
+                if event.key == pygame.K_i:
+                    Algorithms.algorithm_ids(lambda:draw(win, graph, rows, width), graph, start, end, len(nodes))  
+                    pygame.event.wait()   
 
-                        choice = choice_input("Please enter a number 1.UCS 2.IDS 3.A* 4.reset:")
+             
+                if event.key == pygame.K_a:
+                    Algorithms.algorithm_astar(lambda:draw(win, graph, rows, width), graph, start, end)   
+                    pygame.event.wait()   
+ 
 
-            if choice == 2:
-                if event.type == pygame.KEYDOWN: 
-                    if event.key == pygame.K_SPACE:
-                        for row in graph:
-                            for graph_element in row:
-                                graph_element.update_neighbours(graph)
-
-                        Algorithms.algorithm_ids(lambda:draw(win, graph, rows, width), graph, start, end, len(nodes))     
-
-                        choice = choice_input("Please enter a number 1.UCS 2.IDS 3.A* 4.reset:")  
-
-            if choice == 3:
-                if event.type == pygame.KEYDOWN: 
-                    if event.key == pygame.K_SPACE:
-                        for row in graph:
-                            for graph_element in row:
-                                graph_element.update_neighbours(graph)
-
-                        Algorithms.algorithm_astar(lambda:draw(win, graph, rows, width), graph, start, end)      
-
-                        choice = choice_input("Please enter a number 1.UCS 2.IDS 3.A* 4.reset:")   
-
-            if choice == 4:
-                graph = temp_graph  
-                        
+                if event.key == pygame.K_SPACE:
+                    graph = reset_graph(graph, start, end)
+                    
+                    
+                               
 
     pygame.quit()
 

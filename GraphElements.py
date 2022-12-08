@@ -15,6 +15,9 @@ class GraphElement:
         self.type = "empty"
         self.orientation = "null"
 
+    def reset(self):
+        self.colour = Colour.WHITE
+
     def get_pos(self):
         return self.row, self.col
 
@@ -26,6 +29,12 @@ class GraphElement:
 
     def get_value(self):
         return self.value[0], self.value[1]
+
+    def is_end(self):
+        pass
+
+    def is_start(self):
+        pass
 
     def draw(self, win):
         pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.width))
@@ -77,7 +86,7 @@ class Node(GraphElement):
         return v
     '''     Setters      '''
     def reset(self):
-        self.colour = Colour.GREY
+        self.colour = Colour.LIGHT_GREY
 
     def make_closed(self):
         self.colour = Colour.RED
@@ -160,6 +169,12 @@ class Edge(GraphElement):
     def get_value(self):
         v = [self.row, self.col]
         return v 
+
+    def is_end(self):
+        pass
+
+    def is_start(self):
+        pass
 
     '''     Setters      '''
     def reset(self):

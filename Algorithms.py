@@ -52,8 +52,9 @@ def algorithm_astar(draw, graph, start, end):
 		elif current.get_type() == "edge":
 			for neighbour in current.neighbours:
 				temp_g_score = g_score[current] + 1
+				temp_f_score = temp_g_score + h(current.get_pos(), end.get_pos())
 				
-				if temp_g_score < g_score[neighbour] and h(current.get_pos(), end.get_pos()) > h(neighbour.get_pos(), end.get_pos()):
+				if temp_f_score < f_score[neighbour]:
 					came_from[neighbour] = current
 					g_score[neighbour] = temp_g_score
 					f_score[neighbour] = temp_g_score + h(neighbour.get_pos(), end.get_pos())
@@ -68,8 +69,9 @@ def algorithm_astar(draw, graph, start, end):
 		elif current.get_type() == "node": 
 			for neighbour in current.neighbours:
 				temp_g_score = g_score[current] + neighbour.weight
+				temp_f_score = temp_g_score + h(current.get_pos(), end.get_pos())
 
-				if temp_g_score < g_score[neighbour] and h(current.get_pos(), end.get_pos()) > h(neighbour.get_pos(), end.get_pos()):
+				if temp_f_score < f_score[neighbour] :
 					came_from[neighbour] = current
 					g_score[neighbour] = temp_g_score
 					f_score[neighbour] = temp_g_score + h(neighbour.get_pos(), end.get_pos())
@@ -79,6 +81,8 @@ def algorithm_astar(draw, graph, start, end):
 						open_set.put((f_score[neighbour],count,neighbour))
 						open_set_hash.add(neighbour)
 						neighbour.make_open()
+
+		
 
 		draw()
 
@@ -155,18 +159,18 @@ def algorithm_ucs(draw, graph, start, end):
 
 def algorithm_ids(draw, graph, start, end, n):
 	count = 0
-	deep_searched_count = int(0) 
+	ds_count = 0
 	open_set = PriorityQueue()
-	open_set.put((0, count, end))
+	open_set.put((0, count, start))
 	came_from = {}
 	g_score = {graph_element: float("inf") for row in graph for graph_element in row}
-	g_score[end] = 0
+	g_score[start] = 0
 	f_score = {graph_element: float("inf") for row in graph for graph_element in row}
-	f_score[end] = 0
+	f_score[start] = 0
 
-	open_set_hash = {end}
+	open_set_hash = {start}
 
-	while deep_searched_count < n and not open_set.empty():
+	while not open_set.empty() and ds_count < n:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
@@ -174,8 +178,8 @@ def algorithm_ids(draw, graph, start, end, n):
 		current = open_set.get()[2]
 		open_set_hash.remove(current)
 
-		if current == start:
-			reconstruct_path(came_from, start, end, draw)
+		if current == end:
+			reconstruct_path(came_from, end, draw)
 			end.make_end()
 			start.make_start()
 			return False
@@ -207,20 +211,14 @@ def algorithm_ids(draw, graph, start, end, n):
 
 					if neighbour not in open_set_hash:
 						count += 1
-						deep_searched_count += 1
+						ds_count += 1
 						open_set.put((f_score[neighbour],count,neighbour))
 						open_set_hash.add(neighbour)
 						neighbour.make_open()
 
 		draw()
 
-		if current != end:
+		if current != start:
 			current.make_closed()
 
 	return False
-        
-
-
-
-        
-			
