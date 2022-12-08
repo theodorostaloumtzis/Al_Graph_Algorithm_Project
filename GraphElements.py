@@ -73,8 +73,8 @@ class Node(GraphElement):
         return self.orientation
 
     def get_value(self):
-        return self.value[0], self.value[1]
-
+        v = [self.row, self.col]
+        return v
     '''     Setters      '''
     def reset(self):
         self.colour = Colour.GREY

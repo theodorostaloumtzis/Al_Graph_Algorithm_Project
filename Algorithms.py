@@ -15,11 +15,11 @@ def h(p1, p2):
 
 
 '''    Function that reconstructs the path    '''
-def reconstruct_path(came_from, start, current, draw):
+def reconstruct_path(came_from, current, draw):
 	while current in came_from:
 		current = came_from[current]
 		current.make_path()
-		start.make_start()
+		
 		draw()
 
 
@@ -44,8 +44,9 @@ def algorithm_astar(draw, graph, start, end):
 		open_set_hash.remove(current)
 
 		if current == end:
-			reconstruct_path(came_from, start, end, draw)
+			reconstruct_path(came_from, end, draw)
 			end.make_end()
+			start.make_start()
 			return False
 
 		elif current.get_type() == "edge":
@@ -108,8 +109,9 @@ def algorithm_ucs(draw, graph, start, end):
 		open_set_hash.remove(current)
 
 		if current == end:
-			reconstruct_path(came_from,start, end, draw)
+			reconstruct_path(came_from, end, draw)
 			end.make_end()
+			start.make_start()
 			return False
 
 		elif current.get_type() == "edge":
@@ -149,6 +151,73 @@ def algorithm_ucs(draw, graph, start, end):
 			current.make_closed()
 
 	return False	
+
+
+def algorithm_ids(draw, graph, start, end, n):
+	count = 0
+	deep_searched_count = int(0) 
+	open_set = PriorityQueue()
+	open_set.put((0, count, end))
+	came_from = {}
+	g_score = {graph_element: float("inf") for row in graph for graph_element in row}
+	g_score[end] = 0
+	f_score = {graph_element: float("inf") for row in graph for graph_element in row}
+	f_score[end] = 0
+
+	open_set_hash = {end}
+
+	while deep_searched_count < n and not open_set.empty():
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+
+		current = open_set.get()[2]
+		open_set_hash.remove(current)
+
+		if current == start:
+			reconstruct_path(came_from, start, end, draw)
+			end.make_end()
+			start.make_start()
+			return False
+
+		elif current.get_type() == "edge":
+			for neighbour in current.neighbours:
+				temp_g_score = g_score[current] + 1
+				
+				if temp_g_score < g_score[neighbour]:
+					came_from[neighbour] = current
+					g_score[neighbour] = temp_g_score
+					f_score[neighbour] = temp_g_score 
+
+					if neighbour not in open_set_hash:
+						count += 1
+						open_set.put((f_score[neighbour],count,neighbour))
+						open_set_hash.add(neighbour)
+						neighbour.make_open()
+
+		
+		elif current.get_type() == "node": 
+			for neighbour in current.neighbours:
+				temp_g_score = g_score[current] + neighbour.weight
+
+				if temp_g_score < g_score[neighbour]:
+					came_from[neighbour] = current
+					g_score[neighbour] = temp_g_score
+					f_score[neighbour] = temp_g_score 
+
+					if neighbour not in open_set_hash:
+						count += 1
+						deep_searched_count += 1
+						open_set.put((f_score[neighbour],count,neighbour))
+						open_set_hash.add(neighbour)
+						neighbour.make_open()
+
+		draw()
+
+		if current != end:
+			current.make_closed()
+
+	return False
         
 
 

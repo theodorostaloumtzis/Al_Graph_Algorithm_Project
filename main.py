@@ -11,6 +11,7 @@ from random import randrange
 def make_graph(rows,width):
     graph = []
     edges = []
+    nodes = []
     total_rows = 2 * rows - 1
     gap = width // total_rows
 
@@ -19,13 +20,14 @@ def make_graph(rows,width):
         for j in range(total_rows):
             if i % 2 == 0 and j % 2 == 0:
                 graph[i].append(Node(i, j, gap, total_rows))
+                nodes.append(graph[i][j].get_value())
             elif i % 2 == 1 and j % 2 == 1:
                 graph[i].append(GraphElement(i, j , gap, total_rows))
             else:
                 graph[i].append(Edge(i, j, gap, total_rows))
                 edges.append(graph[i][j].get_value())
 
-    return graph, edges
+    return graph, edges, nodes
 
 
 '''     Draws the window     '''
@@ -152,7 +154,7 @@ def main():
 
     width = ideal_width(rows)
 
-    graph, edges = make_graph(rows, width)
+    graph, edges,  nodes = make_graph(rows, width)
 
     graph = remove_edges(graph, edges, percentage)
 
@@ -194,7 +196,7 @@ def main():
                             for graph_element in row:
                                 graph_element.update_neighbours(graph)
 
-                        ''' algorithm '''     
+                        Algorithms.algorithm_ids(lambda:draw(win, graph, rows, width), graph, start, end, len(nodes))     
 
                         choice = choice_input("Please enter a number 1.UCS 2.IDS 3.A* 4.reset:")  
 
