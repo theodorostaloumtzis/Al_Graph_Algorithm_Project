@@ -1,7 +1,7 @@
 import pygame
 import Colour
 import Algorithms
-import Graph
+import GraphClass
 
 def draw(win, graph, rows, width):
     win.fill(Colour.WHITE)
@@ -40,11 +40,11 @@ def main():
 
     width = ideal_width(rows)
 
-    graph, edges, nodes = Graph.make_graph(rows, width)
+    graph = GraphClass
 
-    graph = Graph.remove_edges(graph, edges, percentage)
+    graph.make_graph()
 
-    graph, start, end = Graph.random_start_end(graph)
+    graph.remove_edges(percentage)
 
     win = pygame.display.set_mode((width, width))
     pygame.display.set_caption("A Path Finding Algorithm Program ")
@@ -62,19 +62,16 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_u:
-                    Algorithms.algorithm_ucs(lambda: draw(win, graph, rows, width), graph, start, end)
-                    pygame.event.wait()
+                    Algorithms.algorithm_ucs(lambda: draw(win, graph.graph, rows, width), graph.graph, graph.start, graph.end)
 
                 if event.key == pygame.K_i:
-                    Algorithms.algorithm_ids(lambda: draw(win, graph, rows, width), graph, start, end, len(nodes))
-                    pygame.event.wait()
+                    Algorithms.algorithm_ids(lambda: draw(win, graph.graph, rows, width), graph.graph, graph.start, graph.end, len(graph.nodes))
 
                 if event.key == pygame.K_a:
-                    Algorithms.algorithm_astar(lambda: draw(win, graph, rows, width), graph, start, end)
-                    pygame.event.wait()
+                    Algorithms.algorithm_astar(lambda: draw(win, graph.graph, rows, width), graph.graph, graph.start, graph.end)
 
                 if event.key == pygame.K_SPACE:
-                    graph = Graph.reset_graph(graph, start, end)
+                    graph.reset_graph(graph.graph, graph.start, graph.end)
 
     pygame.quit()
 

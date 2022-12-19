@@ -41,13 +41,12 @@ def remove_edges(graph, edges, p):
         if num_check(r, temp_slots):
             rm_edges.append(edges[r])
             temp_slots.append(r)
-    temp = 0
+
     for i in range(len(graph)):
         for j in range(len(graph)):
             if graph[i][j].get_type() == "edge":
                 if edge_check(graph[i][j], rm_edges):
                     graph[i][j].make_removed()
-                    temp += 1
 
     return graph
 
@@ -56,57 +55,49 @@ def remove_edges(graph, edges, p):
 
 
 def edge_check(edge, rm_edge):
-    report = False
     for v in rm_edge:
         if v[0] == edge.row and v[1] == edge.col:
-            report = True
+            return True
 
-    return report
+    return False
 
 
 '''    Checks if the random integer number exists in the list of random integers    '''
 
 
 def num_check(r, temp_slots):
-    report = True
     for x in temp_slots:
         if r == x:
-            report = False
+            return False
 
-    return report
+    return True
 
 
 '''    Makes a random start and end    '''
 
 
 def random_start_end(graph):
-    x = 0
-    y = 0
     temp = 0
     tmp_x = 0
     tmp_y = 0
     start = None
     end = None
 
-    while temp != 1:
+    while start is None:
         x = randrange(len(graph))
         y = randrange(len(graph))
-        if x % 2 == 0 and y % 2 == 0:
+        if graph[x][y].get_type() == "node":
             graph[x][y].make_start()
             tmp_x = x
             tmp_y = y
             start = graph[x][y]
-            temp = 1
 
-    temp = 0
-
-    while temp != 1:
+    while end is None:
         x = randrange(len(graph))
         y = randrange(len(graph))
-        if x % 2 == 0 and y % 2 == 0:
+        if graph[x][y].get_type() == "node":
             if x != tmp_x and y != tmp_y:
                 graph[x][y].make_end()
-                temp = 1
                 end = graph[x][y]
 
     return graph, start, end
