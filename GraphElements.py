@@ -170,10 +170,6 @@ class Edge(GraphElement):
     def get_orientation(self):
         return self.orientation
 
-    def get_value(self):
-        v = [self.row, self.col]
-        return v
-
     def is_end(self):
         pass
 

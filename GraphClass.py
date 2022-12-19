@@ -4,6 +4,21 @@ from GraphElements import Edge
 from random import randrange
 
 
+def num_check(r, temp_slots):
+    for i in temp_slots:
+        if i == r:
+            return False
+    return True
+
+
+def edge_check(edge, rm_edge):
+    for v in rm_edge:
+        if v[0] == edge.row and v[1] == edge.col:
+            return True
+
+    return False
+
+
 class Graph:
     def __init__(self, rows, width):
         self.rows = rows
@@ -13,6 +28,8 @@ class Graph:
         self.nodes = []
         self.total_rows = 2 * self.rows - 1
         self.gap = self.width // self.total_rows
+        self.start = None
+        self.end = None
 
     def make_graph(self):
         for i in range(self.total_rows):
@@ -27,7 +44,6 @@ class Graph:
                     self.graph[i].append(Edge(i, j, self.gap, self.total_rows))
                     self.edges.append(self.graph[i][j].get_value())
 
-
     def remove_edges(self, p):
         rmp = (p * len(self.edges)) / 100
         temp_slots = []  # a list of random list slots used to check if randint returned an already existing num
@@ -35,26 +51,46 @@ class Graph:
 
         while len(rm_edges) < rmp:
             r = randrange(len(self.edges))
-            if self.num_check(r, temp_slots):
+            if num_check(r, temp_slots):
                 rm_edges.append(self.edges[r])
                 temp_slots.append(r)
 
         for i in range(len(self.graph)):
             for j in range(len(self.graph)):
                 if self.graph[i][j].get_type() == "edge":
-                    if self.edge_check(self.graph[i][j], rm_edges):
+                    if edge_check(self.graph[i][j], rm_edges):
                         self.graph[i][j].make_removed()
 
+    def make_random_start_end(self):
+        tmp_x = 0
+        tmp_y = 0
 
-    def num_check(self, r, temp_slots):
-        for i in temp_slots:
-            if i == r:
-                return False
-        return True
+        while self.start is None:
+            x = randrange(len(self.graph))
+            y = randrange(len(self.graph))
+            if self.graph[x][y].get_type() == "node":
+                self.graph[x][y].make_start()
+                tmp_x = x
+                tmp_y = y
+                self.start = self.graph[x][y]
 
-    def edge_check(self, edge, rm_edge):
-        for v in rm_edge:
-            if v[0] == edge.row and v[1] == edge.col:
-                return True
+        while self.end is None:
+            x = randrange(len(self.graph))
+            y = randrange(len(self.graph))
+            if self.graph[x][y].get_type() == "node":
+                if x != tmp_x and y != tmp_y:
+                    self.graph[x][y].make_end()
+                    self.end = self.graph[x][y]
 
-        return False
+    def reset_graph(self):
+        for i in range(len(self.graph)):
+            for j in range(len(self.graph)):
+
+                if self.graph[i][j].get_type() == "edge" and self.graph[i][j].is_removed():
+                    self.graph[i][j].make_removed()
+
+                else:
+                    self.graph[i][j].reset()
+
+            self.graph[self.end.row][self.end.col].make_end()
+            self.graph[self.start.row][self.start.col].make_start()

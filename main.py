@@ -1,9 +1,10 @@
 import pygame
 import Colour
-import Algorithms
-import GraphClass
+from AlgorithmsClass import Algorithms
+from GraphClass import Graph
 
-def draw(win, graph, rows, width):
+
+def draw(win, graph):
     win.fill(Colour.WHITE)
 
     for row in graph:
@@ -29,6 +30,8 @@ def ideal_width(rows):
         return total_rows * 7
     else:
         return total_rows * 30
+
+
 def main():
     rows = int(input("Please insert the size of the grid NxN: "))
     while rows < 3 or rows > 50:
@@ -40,11 +43,13 @@ def main():
 
     width = ideal_width(rows)
 
-    graph = GraphClass
+    graph = Graph(rows, width)
 
     graph.make_graph()
 
     graph.remove_edges(percentage)
+
+    graph.make_random_start_end()
 
     win = pygame.display.set_mode((width, width))
     pygame.display.set_caption("A Path Finding Algorithm Program ")
@@ -52,26 +57,29 @@ def main():
     running = True
 
     while running:
-        draw(win, graph, rows, width)
-        for row in graph:
+
+        algorithm = Algorithms(graph.graph, graph.start, graph.end)
+        draw(win, graph.graph)
+        for row in graph.graph:
             for graph_element in row:
-                graph_element.update_neighbours(graph)
+                graph_element.update_neighbours(graph.graph)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
             if event.type == pygame.KEYDOWN:
+                graph.reset_graph()
                 if event.key == pygame.K_u:
-                    Algorithms.algorithm_ucs(lambda: draw(win, graph.graph, rows, width), graph.graph, graph.start, graph.end)
+                    algorithm.algorithm_ucs(lambda: draw(win, graph.graph))
 
                 if event.key == pygame.K_i:
-                    Algorithms.algorithm_ids(lambda: draw(win, graph.graph, rows, width), graph.graph, graph.start, graph.end, len(graph.nodes))
+                    algorithm.algorithm_ids(lambda: draw(win, graph.graph), rows * rows)
 
                 if event.key == pygame.K_a:
-                    Algorithms.algorithm_astar(lambda: draw(win, graph.graph, rows, width), graph.graph, graph.start, graph.end)
+                    algorithm.algorithm_astar(lambda: draw(win, graph.graph))
 
                 if event.key == pygame.K_SPACE:
-                    graph.reset_graph(graph.graph, graph.start, graph.end)
+                    graph.reset_graph()
 
     pygame.quit()
 
