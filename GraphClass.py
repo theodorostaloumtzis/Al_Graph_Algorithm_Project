@@ -85,12 +85,4 @@ class Graph:
     def reset_graph(self):
         for i in range(len(self.graph)):
             for j in range(len(self.graph)):
-
-                if self.graph[i][j].get_type() == "edge" and self.graph[i][j].is_removed():
-                    self.graph[i][j].make_removed()
-
-                else:
-                    self.graph[i][j].reset()
-
-            self.graph[self.end.row][self.end.col].make_end()
-            self.graph[self.start.row][self.start.col].make_start()
+                self.graph[i][j].reset()

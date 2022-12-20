@@ -75,7 +75,7 @@ class Node(GraphElement):
         return self.colour == Colour.ORANGE
 
     def is_end(self):
-        return self.colour == Colour.TURQUOISE
+        return self.colour == Colour.BLACK
 
     def get_type(self):
         return self.type
@@ -90,7 +90,12 @@ class Node(GraphElement):
     '''     Setters      '''
 
     def reset(self):
-        self.colour = Colour.LIGHT_GREY
+        if self.is_start():
+            self.colour = Colour.ORANGE
+        elif self.is_end():
+            self.colour = Colour.BLACK
+        else:
+            self.colour = Colour.LIGHT_GREY
 
     def make_closed(self):
         self.colour = Colour.RED
@@ -179,7 +184,10 @@ class Edge(GraphElement):
     '''     Setters      '''
 
     def reset(self):
-        self.colour = Colour.BLACK
+        if self.is_removed():
+            self.colour = Colour.WHITE
+        else:
+            self.colour = Colour.BLACK
 
     def make_closed(self):
         self.colour = Colour.RED
